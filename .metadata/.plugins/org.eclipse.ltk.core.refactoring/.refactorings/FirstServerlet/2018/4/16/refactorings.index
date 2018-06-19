@@ -1,0 +1,20 @@
+1523859588729	Delete element
+1523861304308	Rename resource '张香港_HK07N142251800119339.pdf'
+1523868933520	Delete element
+1523934481223	Delete element
+1523935197869	Rename type 'ServletContext'
+1523943570050	Encapsulate field 'data'
+1523958523009	Delete elements
+1524037730317	Rename compilation unit 'DBBean.java'
+1524038562803	Move 'JDBCDEMOConn.jsp' to 'WebContent'
+1524041194507	Move 2 resources to 'WEB-INF'
+1524041713446	Move 2 resources to 'lib'
+1524045204646	Copy compilation unit
+1524045281136	Copy compilation unit
+1524045342032	Move 3 resources to 'WebContent'
+1524045360993	Copy files
+1524045385764	Copy files
+1524045394025	Copy file
+1524045403273	Move 'standard.jar' to 'lib'
+1524045409675	Move 'jstl-1.2.jar' to 'lib'
+1524045418664	Delete element

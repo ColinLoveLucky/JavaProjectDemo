@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.netfinworks.cert:cert-service-facade:2.0.0-fit-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://D:/maven/repository/com/netfinworks/cert/cert-service-facade/2.0.0-fit-SNAPSHOT/cert-service-facade-2.0.0-fit-20170607.113152-1.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://D:/maven/repository/com/netfinworks/cert/cert-service-facade/2.0.0-fit-SNAPSHOT/cert-service-facade-2.0.0-fit-20170607.113152-1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://D:/maven/repository/com/netfinworks/cert/cert-service-facade/2.0.0-fit-SNAPSHOT/cert-service-facade-2.0.0-fit-20170607.113152-1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

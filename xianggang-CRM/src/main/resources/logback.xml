@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%date{yyyy-MM-dd HH:mm:ss.SSS}	[%thread]	%-5level	%logger	-	%msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="logFile"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>logs/loan-crm.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>logs/loan-crm.log.%d{yyyy-MM-dd}-%i
+			</fileNamePattern>
+			<TimeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<MaxFileSize>10MB</MaxFileSize>
+			</TimeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%date{yyyy-MM-dd HH:mm:ss.SSS}	[%thread]	%-5level	%logger	-	%msg%n</pattern>
+		</encoder>
+	</appender>
+	
+	<appender name="errLogFile"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>logs/loan-crm.error.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>logs/loan-crm.error.log.%d{yyyy-MM-dd}-%i
+			</fileNamePattern>
+			<TimeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<MaxFileSize>10MB</MaxFileSize>
+			</TimeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%date{yyyy-MM-dd HH:mm:ss.SSS}	[%thread]	%-5level	%logger	-	%msg%n</pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>ERROR</level>
+		</filter>
+	</appender>
+
+	<root level="info">
+		<appender-ref ref="stdout" />
+		<appender-ref ref="logFile" />
+		<appender-ref ref="errLogFile" />
+	</root>
+	
+</configuration>

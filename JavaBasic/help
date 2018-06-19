@@ -1,0 +1,20 @@
+快捷键：
+Alt+/ 只能提示
+Ctr+Shift+O 导入命名空间
+F11 run
+F5 顺序调试
+F6 跳入
+F8 执行完
+ctr +shift +B 打断点
+Ctr + M 最大化
+Ctr+Shift+/ 注释
+Ctr +Shift+\ 取消注释
+CTR+/ 注释 与取消注释
+ Ctrl + Shift + F8 Debugg 与 JEE切换
+ Ctr+ Shift +f6 窗口切换
+ CTR+Shift+L 快捷键 展示
+ CTR+W 关闭窗口
+ CTR+Shift+F 格式化
+ Alt+CTR+S 取消服务器
+ ALT+CTR+R重启
+ DJ Java Decompiler 反编译工具 http://www.neshkov.com/dj.html

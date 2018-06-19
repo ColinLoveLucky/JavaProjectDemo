@@ -1,0 +1,32 @@
+1524556727982	Convert local variable 'context' to field
+1524557293354	Move 'config.xml' to 'WebContent'
+1524557876865	Move file
+1524557906414	Move 'config.xml' to 'WebContent'
+1524558029072	Move 'config.xml' to 'Spring5Web'
+1524558948632	Delete element
+1524558950936	Move 'config.xml' to 'WebContent'
+1524558959871	Move 'config.xml' to 'WEB-INF'
+1524558973171	Move 'config.xml' to 'Spring5Web'
+1524560358967	Rename type 'TestHelloWorld'
+1524561813492	Delete element
+1524623293707	Copy file
+1524623312491	Delete element
+1524623464005	Copy file
+1524623480942	Delete element
+1524623816529	Copy file
+1524623869974	Delete element
+1524623883561	Copy file
+1524623999457	Delete element
+1524624068138	Copy file
+1524624082820	Delete element
+1524624106270	Copy file
+1524624118260	Delete element
+1524625815414	Copy file
+1524625826757	Delete element
+1524625830282	Copy file
+1524626189674	Copy file
+1524634711999	Encapsulate field 'map'
+1524634986207	Encapsulate field 'map'
+1524637289133	Copy file
+1524640760933	Encapsulate field 'looger'
+1524643237887	Delete element

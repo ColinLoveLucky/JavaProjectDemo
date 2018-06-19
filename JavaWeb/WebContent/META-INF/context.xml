@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context antiJARLocking="true" path="/JDBCDemo">
+<Resource name="jdbc/demo"
+auth="Container" type="javax.sql.DataSource"
+maxActive="100" maxIdle="30" maxWait="1000"
+username="root" password="WangHua1986" driverClassName="com.mysql.jdbc.Driver"
+url="jdbc:mysql://172.16.36.45:3306/Test?useUnicode=true&amp;characterEncoding=UTF8">
+</Resource>
+</Context>

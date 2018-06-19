@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="BizApp-BorrowerLite:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="BizApp-BorrowerLite.war">
+      <element id="artifact" artifact-name="BizApp-BorrowerLite:war exploded" />
+    </root>
+  </artifact>
+</component>

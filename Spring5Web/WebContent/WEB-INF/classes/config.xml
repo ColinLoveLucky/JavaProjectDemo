@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+<bean id="HelloWorld" class="com.gc.action.HelloWorld" destroy-method="cleanup">
+	<property name="msg">
+	<value>HelloWorld</value>
+	</property>
+	<property name="date">
+	<ref bean="date"></ref>
+	</property>
+</bean>
+<bean id="date" class="java.util.Date"></bean>
+<bean id="Hello" class="com.gc.action.EnHello">
+	<property name="msg">
+	<value>colin</value>
+	</property>
+</bean>
+<bean id="constructorIoc" class="com.gc.action.ConstructorIoc" scope="singleton">
+	<constructor-arg index="0">
+	<value>Hello Constructor IOC</value>
+	</constructor-arg>
+</bean>
+</beans>

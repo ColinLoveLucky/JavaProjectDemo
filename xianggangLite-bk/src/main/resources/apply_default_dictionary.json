@@ -1,0 +1,99 @@
+{
+    "loanAppInfo" : {
+      "purpose" : "",
+      "appAmount" :"",
+      "acceptAmount" : "",
+      "loanMaturity" : ""
+    },
+    "personalInfo" : {
+      "name" : "",
+      "idCard" : "",
+      "nameUsedBefore" : "",
+      "sex" : "",
+      "age" : "",
+      "maritalStatus" : "",
+      "educateLevel" : "",
+      "houseStatus" : "",
+      "mobilePhone" : "",
+      "telephone" : "",
+      "QQ" : "",
+      "WeChat" : "",
+      "email" : "",
+      "supportNumber" : "",
+      "childernNumber" : "",
+      "quota" : "",
+      "usedMonth" : ""
+    },
+    "employmentInfo" : {
+      "COM_INDUSTRY" : "",
+      "dept" : "",
+      "duty" : "",
+      "position" : "",
+      "companyType" : "",
+      "tel" : "",
+      "hiredate" : "",
+      "commEmail" : "",
+      "monthlyIncome" : "",
+      "monthlyPaymentMethod" : "",
+      "monthlyPayDay" : ""
+    },
+    "contactInfo" : [{
+        "contactProperty" : "CONTACT_RELATIVE1",
+        "relation" : "",
+        "isKown" : "",
+        "name" : "",
+        "phone" : "",
+        "jobTitle" : "",
+        "telephone" : ""
+      }, {
+        "contactProperty" : "CONTACT_RELATIVE2",
+        "relation" : "",
+        "name" : "",
+        "phone" : "",
+        "jobTile" : "",
+        "telephone" : ""
+      }, {
+        "contactProperty" : "CONTACT_RELATIVE3",
+        "relation" : "",
+        "name" : "",
+        "phone" : "",
+        "jobTitle" : "",
+        "telephone" : ""
+      }, {
+        "contactProperty" : "CONTACT_JOB_CERT",
+        "name" : "",
+        "dept" : "",
+        "job" : "",
+        "phone" : ""
+      }],
+    "bankInfo" : {
+      "bank" : "",
+      "accountNum" : "",
+      "mobile" : ""
+    },
+    "salesInfo" : {
+      "customerManagerName" : "",
+      "customerManagerCode" : "",
+      "customerServiceName" : "",
+      "customerServiceCode" : "",
+      "isChannel" : "",
+      "channelAppId" : ""
+    },
+    "firstAudit" : {
+      "auditResult" : "",
+      "opinion" : "",
+      "remark" : "",
+      "typeCode" : "",
+      "subTypeCode" : "",
+      "auditor" : ""
+    },
+    "finalAudit" : {
+      "auditResult" : "",
+      "opinion" : "",
+      "remark" : "",
+      "typeCode" : "",
+      "subTypeCode" : "",
+      "auditor" : ""
+    },
+    "images" : []
+  }

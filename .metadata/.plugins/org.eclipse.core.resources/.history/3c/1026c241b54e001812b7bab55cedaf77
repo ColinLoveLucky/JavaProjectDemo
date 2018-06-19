@@ -1,0 +1,8 @@
+package com.test.maven;
+
+public class OneTest {
+
+	public void testOne() {
+
+	}
+}

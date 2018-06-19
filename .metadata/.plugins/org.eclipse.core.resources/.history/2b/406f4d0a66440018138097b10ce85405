@@ -1,0 +1,49 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<jsp:useBean id="fileService" class="cc.openhome.FileService" scope="application"></jsp:useBean>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<form action="upload.do" method="post" enctype="multipart/form-data">
+select file:<input type="file" name="filename" value="" /><br/>
+<input type="submit" value="Upload" name="upload" />
+</form>
+<hr>
+<table style="text-align:left;" border="1" cellpadding="2" cellspacing="2">
+<tbody>
+<tr>
+<td>
+filename
+</td>
+<td>upload time</td>
+<td>
+operate
+</td>
+</tr>
+<tr>
+<c:forEach var="file" items="${fileService.fileList}">
+<tr>
+<td>
+${file.filename}
+</td>
+<td>
+${file.savedTime}
+<td>
+<a href="download.do?id=${file.id}">download</a>
+<a href="delete.do?id=${file.id }">delete</a>
+</td>
+<td>
+
+</td>
+</tr>
+</c:forEach>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

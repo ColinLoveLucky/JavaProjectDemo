@@ -1,0 +1,2 @@
+NotEmpty.student.name = Name is required!
+student.age.beyond = Age value must be between 1 and 150!

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+
+	<!-- 应用系统名称 -->
+	<property name="appName" value="borrowerLite-task" />
+	<!-- 业务日志路径 -->
+	<property name="logging.path" value="./logs" />
+	<!-- 业务日志文件大小 -->
+	<property name="log.file.size" value="50MB" />
+	<!-- 日志保存时间(天) -->
+	<property name="log.save.time.day" value="100" />
+	<!-- 字符集UTF-8 -->
+	<property name="charset.utf8" value="utf-8"/>
+
+	<!-- 控制台输出 -->
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>DEBUG</level>
+		</filter>
+		<encoder>
+			<pattern>%date{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+			<charset class="java.nio.charset.Charset">${charset.utf8}</charset>
+		</encoder>
+	</appender>
+
+	<!-- 文件输出 -->
+	<appender name="rollingFile"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<onMatch>DENY</onMatch>
+			<onMismatch>ACCEPT</onMismatch>
+		</filter>
+		<encoder>
+			<pattern>%date{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+			<charset class="java.nio.charset.Charset">${charset.utf8}</charset>
+		</encoder>
+		<file>${logging.path}/${appName}_info.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${logging.path}/${appName}_info_%d{yyyy-MM-dd}-%i.log</fileNamePattern>
+			<MaxHistory>${log.save.time.day}</MaxHistory>
+			<TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<MaxFileSize>${log.file.size}</MaxFileSize>
+			</TimeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+	</appender>
+	
+	<!-- 错误日志输出 -->
+	<appender name="errorAppender"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>ERROR</level>
+		</filter>
+		<encoder>
+			<pattern>%date{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+			<charset class="java.nio.charset.Charset">${charset.utf8}</charset>
+		</encoder>
+		<file>${logging.path}/${appName}_error.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${logging.path}/${appName}_error_%d{yyyy-MM-dd}-%i.log</fileNamePattern>
+			<MaxHistory>${log.save.time.day}</MaxHistory>
+			<TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<MaxFileSize>${log.file.size}</MaxFileSize>
+			</TimeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+	</appender>
+	
+	<!-- 日志输出级别 -->
+	<root level="INFO">
+		<appender-ref ref="console" />
+		<appender-ref ref="rollingFile" />
+		<appender-ref ref="errorAppender" />
+	</root>
+</configuration>

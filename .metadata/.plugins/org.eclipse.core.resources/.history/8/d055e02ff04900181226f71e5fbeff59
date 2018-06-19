@@ -1,0 +1,12 @@
+package com.yibai.springmvc;
+
+import org.springframework.stereotype.Controller;
+
+@Controller
+public class WebController {
+
+	@RequestMapping(value = "/index", method = RequestMethod.GET)
+	public String index() {
+		return "index";
+	}
+}

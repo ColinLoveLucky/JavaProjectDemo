@@ -1,0 +1,44 @@
+1524729653423	Rename type 'HelloControl'
+1524733258496	Delete elements
+1524734009459	Rename resource 'HelloWeb-servlet.xml'
+1524736444692	Rename resource 'Hello.jsp'
+1524738832093	Rename resource 'SpringMVC4-servlet.xml'
+1524738850684	Move 'spring.xml' to 'classess'
+1524738857151	Move file
+1524738862606	Delete element
+1524739019723	Move 'spring.xml' to 'jsp'
+1524796439207	Copy file
+1524813815859	Copy file
+1524813821808	Delete element
+1524813830162	Delete element
+1524813921349	Move 'spring.xml' to 'WEB-INF'
+1524814532624	Encapsulate field 'age'
+1524814538571	Encapsulate field 'id'
+1524814542500	Encapsulate field 'name'
+1524814958803	Rename resource 'Student.jsp'
+1524881103667	Encapsulate field 'username'
+1524881107654	Encapsulate field 'password'
+1524881111625	Encapsulate field 'address'
+1524881115971	Encapsulate field 'receivePaper'
+1524881120548	Encapsulate field 'favoriteFrameworks'
+1524882132800	Encapsulate field 'gender'
+1524882347585	Encapsulate field 'country'
+1524882624393	Encapsulate field 'skills'
+1524898671948	Copy file
+1524899169502	Delete element
+1524899265375	Encapsulate field 'file'
+1524903582840	Delete element
+1524903714319	Delete element
+1524904536764	Delete element
+1524906180111	Rename resource 'addStudent.jsp'
+1524906933019	Rename resource 'student.jsp'
+1524908243995	Copy file
+1524909448546	Copy file
+1524909497131	Rename resource 'messages.properties'
+1524909504532	Delete element
+1524910493249	Copy file
+1524910513944	Rename resource 'errors_en_US.properties'
+1524910521346	Copy file
+1524910530978	Delete element
+1524910537885	Delete element
+1524910564806	Rename resource 'messages.properties'

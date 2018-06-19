@@ -1,0 +1,9 @@
+[
+{"serviceId":"BizApp-QYJ","host":"172.16.37.35","port":8089,"secure":false},
+{"serviceId":"BizApp-QDZT","host":"localhost","port":8081,"secure":false},
+{"serviceId":"ndesapi","host":"172.16.5.32","port":8888,"secure":false},
+{"serviceId":"bpms-api","host":"172.16.5.31","port":8080,"secure":false},
+{"serviceId":"borrower-lite","host":"172.16.5.32","port":7000,"secure":false},
+{"serviceId":"crm-api","host":"172.16.35.43","port":10009,"secure":false},
+{"serviceId":"n-cobra","host":"172.16.35.20","port":8090,"secure":false}
+]

@@ -1,0 +1,9 @@
+[	
+{"serviceId":"BizApp-QYJ","MaxAutoRetries":"0","ServerListRefreshInterval":"1000","maxConcurrentRequests":1},
+{"serviceId":"BizApp-QDZT","MaxAutoRetries":"0","ServerListRefreshInterval":"1000","maxConcurrentRequests":1},
+{"serviceId":"ndesapi","MaxAutoRetries":"0","ServerListRefreshInterval":"1000","maxConcurrentRequests":1},
+{"serviceId":"bpms-api","MaxAutoRetries":"0","ServerListRefreshInterval":"1000","maxConcurrentRequests":1},
+{"serviceId":"borrower-lite","MaxAutoRetries":"0","ServerListRefreshInterval":"1000","maxConcurrentRequests":1},
+{"serviceId":"crm-api","MaxAutoRetries":"0","ServerListRefreshInterval":"1000","maxConcurrentRequests":1},
+{"serviceId":"n-cobra","MaxAutoRetries":"0","ServerListRefreshInterval":"1000","maxConcurrentRequests":1}
+]

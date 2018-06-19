@@ -1,0 +1,10 @@
+package com.test.basictype;
+
+public class ArrayClass {
+	public void testArray() {
+		String[] strArray = new String[] { "Hello", "World", "Hi" };
+		for (String item : strArray) {
+			System.out.println("Item:" + item);
+		}
+	}
+}

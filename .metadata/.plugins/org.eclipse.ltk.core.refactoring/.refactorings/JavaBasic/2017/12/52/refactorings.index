@@ -1,0 +1,8 @@
+1514255784887	Encapsulate field 'className'
+1514255796445	Encapsulate field 'breed'
+1514255806548	Encapsulate field 'age'
+1514255810871	Encapsulate field 'color'
+1514276547552	Convert local variable 'getClassWay1' to field
+1514277528695	Encapsulate field 'y'
+1514278749625	Encapsulate field 'y'
+1514278991133	Convert local variable 'str1' to field

@@ -1,0 +1,5 @@
+package com.maven;
+
+public class HelloSpringController {
+
+}

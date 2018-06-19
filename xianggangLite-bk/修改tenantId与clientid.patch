@@ -1,0 +1,688 @@
+Index: src/main/java/com/qf/cobra/bpms/service/IBpmsService.java
+===================================================================
+--- src/main/java/com/qf/cobra/bpms/service/IBpmsService.java	(revision 749)
++++ src/main/java/com/qf/cobra/bpms/service/IBpmsService.java	(working copy)
+@@ -9,15 +9,15 @@
+ 	 * @param appId
+ 	 * @return
+ 	 */
+-	public String startBpmProcess(String appId); 
++	public String startBpmProcess(Map<String, String> headers, String appId); 
+ 	/**
+ 	 * @param processInstanceId 流程编号
+ 	 * @return
+ 	 */
+ 	@Deprecated
+-	public Map<String, Object> queryBpmStatus(String processInstanceId);
++	public Map<String, Object> queryBpmStatus(Map<String, String> headers, String processInstanceId);
+ 	
+-	public Map<String, Object> queryProcessInstance(String processInstanceId);
++	public Map<String, Object> queryProcessInstance(Map<String, String> headers, String processInstanceId);
+ 	
+ 	/**
+ 	 * 查询用户下待处理的流程列表
+@@ -24,7 +24,7 @@
+ 	 * @param userId
+ 	 * @return
+ 	 */
+-	public List<Map<String, Object>> queryBpmListForUser(String userId);
++	public List<Map<String, Object>> queryBpmListForUser(Map<String, String> headers, String userId);
+ 	
+ 	/**
+ 	 * 查询用户下待处理的流程列表-分页
+@@ -31,7 +31,7 @@
+ 	 * @param userId
+ 	 * @return
+ 	 */
+-	public Map<String, Object> queryBpmListForUser(String userId,String start,String size);
++	public Map<String, Object> queryBpmListForUser(Map<String, String> headers, String userId,String start,String size);
+ 	
+ 	/**
+ 	 * 查询用户下已完成的流程列表
+@@ -38,7 +38,7 @@
+ 	 * @param userId
+ 	 * @return
+ 	 */
+-	public List<Map<String, Object>> queryBpmHistoryListForUser(String userId);
++	public List<Map<String, Object>> queryBpmHistoryListForUser(Map<String, String> headers, String userId);
+ 	
+ 	/**
+ 	 * 查询用户下已完成的流程列表
+@@ -45,7 +45,7 @@
+ 	 * @param userId
+ 	 * @return
+ 	 */
+-	public Map<String, Object> queryBpmHistoryListForUser(String userId,String start,String size);
++	public Map<String, Object> queryBpmHistoryListForUser(Map<String, String> headers, String userId,String start,String size);
+ 	
+ 	/**
+ 	 * 查询机构下未签收的流程列表
+@@ -52,7 +52,7 @@
+ 	 * @param groupId
+ 	 * @return
+ 	 */
+-	public List<Map<String, Object>> queryBpmListForGroup(String groupId);
++	public List<Map<String, Object>> queryBpmListForGroup(Map<String, String> headers, String groupId);
+ 	
+ 	/**
+ 	 * 查询机构下未签收的流程列表
+@@ -59,7 +59,7 @@
+ 	 * @param groupId
+ 	 * @return
+ 	 */
+-	public Map<String, Object> queryBpmListForGroup(String groupId,String start,String size);
++	public Map<String, Object> queryBpmListForGroup(Map<String, String> headers, String groupId,String start,String size);
+ 	
+ 	/**
+ 	 * 签收任务
+@@ -67,7 +67,7 @@
+ 	 * @param userId 签收人
+ 	 * @return
+ 	 */
+-	public Boolean claimTask(String taskId,String userId);
++	public Boolean claimTask(Map<String, String> headers, String taskId,String userId);
+ 	
+ 	
+ 	/**
+@@ -76,7 +76,7 @@
+ 	 * @param userId 代理人
+ 	 * @return
+ 	 */
+-	public Boolean delegateTask(String taskId,String userId);
++	public Boolean delegateTask(Map<String, String> headers, String taskId,String userId);
+ 	
+ 	/**
+ 	 * 释放任务
+@@ -83,7 +83,7 @@
+ 	 * @param taskId
+ 	 * @return
+ 	 */
+-	public Boolean releaseTask(String taskId);
++	public Boolean releaseTask(Map<String, String> headers, String taskId);
+ 
+ 	/**
+ 	 * 结束userTask类型任务
+@@ -90,7 +90,7 @@
+ 	 * @param taskId 流程任务编号
+ 	 * @return
+ 	 */
+-	public Boolean compeleteTask(String taskId,
++	public Boolean compeleteTask(Map<String, String> headers, String taskId,
+ 			List<Map<String, String>> variables) ;
+ 	
+ 	/**
+@@ -99,7 +99,16 @@
+ 	 * @param variables
+ 	 * @return
+ 	 */
+-	public Boolean compeleteReciveTask(String processInstanceId,String taskId,
++	public Boolean compeleteReciveTask(Map<String, String> headers, String processInstanceId,String taskId,
+ 			List<Map<String, String>> variables) ;
+ 	
++	
++	/**
++	 * 设置报文头
++	 * @param tenantId
++	 * @param clientId
++	 * @return
++	 */
++	public Map<String, String> getHeadMap(String tenantId,String clientId);
++	
+ }
+Index: src/main/java/com/qf/cobra/bpms/service/impl/BpmsServiceImpl.java
+===================================================================
+--- src/main/java/com/qf/cobra/bpms/service/impl/BpmsServiceImpl.java	(revision 749)
++++ src/main/java/com/qf/cobra/bpms/service/impl/BpmsServiceImpl.java	(working copy)
+@@ -12,7 +12,6 @@
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ import org.springframework.beans.factory.annotation.Autowired;
+-import org.springframework.beans.factory.annotation.Value;
+ import org.springframework.http.MediaType;
+ import org.springframework.stereotype.Service;
+ 
+@@ -49,7 +48,7 @@
+ 	 * 
+ 	 *         通知流程引擎开启流程
+ 	 */
+-	public String startBpmProcess(String appId) {
++	public String startBpmProcess(Map<String, String> headers,String appId) {
+ 		String bpmTransactionNo = null;
+ 		try {
+ 			
+@@ -57,7 +56,7 @@
+ //			param.put("appTransactionNo", appId);
+ 			List<Map<String, String>> variables = JsonUtil.convert(bpmsProperties.getStartVariables(), List.class);
+ 			param.put("variables", variables);
+-			Map<String, String> headers = getDefaultHeadMap();
++
+ 			String url = bpmsProperties.getInstanceUrl();
+ 			String result = HttpClientUtil.doPostWithJson(url,
+ 					param, headers);
+@@ -92,10 +91,10 @@
+ 	 * lang.String)
+ 	 */
+ 	@Override
+-	public Map<String, Object> queryBpmStatus(String processInstanceId) {
++	public Map<String, Object> queryBpmStatus(Map<String, String> headers,String processInstanceId) {
+ 		List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
+ 		params.add(new BasicNameValuePair("processInstanceId", processInstanceId));
+-		Map<String, Object> map = queryBpmList(params);
++		Map<String, Object> map = queryBpmList(headers,params);
+ 		List<Map<String, Object>> list = (List<Map<String, Object>>) MapUtils.getObject(map, "data");
+ 		return (list !=null && list.size() > 0)?list.get(0):null;
+ 	}
+@@ -104,10 +103,9 @@
+ 	 * @see com.quark.cobra.bizapp.bpms.service.IBpmsService#queryProcessInstance(java.lang.String)
+ 	 */
+ 	@Override
+-	public Map<String, Object> queryProcessInstance(String processInstanceId) {
++	public Map<String, Object> queryProcessInstance(Map<String, String> headers,String processInstanceId) {
+ 		Map<String, Object> obj = null;
+ 		try {
+-			Map<String, String> headers = getDefaultHeadMap();
+ 			String url = bpmsProperties.getInstanceUrl()+ "/" + processInstanceId;
+ 			String result = HttpClientUtil.doGet(url, CHARSET_NAME, headers);
+ 			LOGGER.error("流程任务编号:{},查询流程实例结果:{}",processInstanceId,result);
+@@ -126,21 +124,21 @@
+ 	 * @see com.quark.cobra.bizapp.bpms.service.IBpmsService#queryBpmListForUser(java.lang.String)
+ 	 */
+ 	@Override
+-	public List<Map<String, Object>> queryBpmListForUser(String userId) {
++	public List<Map<String, Object>> queryBpmListForUser(Map<String, String> headers,String userId) {
+ 		List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
+ 		params.add(new BasicNameValuePair("userId", userId));
+-		Map<String, Object> map = queryBpmList(params);
++		Map<String, Object> map = queryBpmList(headers,params);
+ 		List<Map<String, Object>> list = (List<Map<String, Object>>) MapUtils.getObject(map, "data");
+ 		return list;
+ 	}
+ 	
+ 	@Override
+-	public Map<String, Object> queryBpmListForUser(String userId,String start,String size) {
++	public Map<String, Object> queryBpmListForUser(Map<String, String> headers,String userId,String start,String size) {
+ 		List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
+ 		params.add(new BasicNameValuePair("userId", userId));
+ 		params.add(new BasicNameValuePair("start", StringUtils.isBlank(start)?"0":start));
+ 		params.add(new BasicNameValuePair("size", StringUtils.isBlank(size)?"10":size));
+-		return queryBpmList(params);
++		return queryBpmList(headers,params);
+ 	}
+ 
+ 	/* (non-Javadoc)
+@@ -147,21 +145,21 @@
+ 	 * @see com.quark.cobra.bizapp.bpms.service.IBpmsService#queryBpmHistoryListForUser(java.lang.String)
+ 	 */
+ 	@Override
+-	public List<Map<String, Object>> queryBpmHistoryListForUser(String userId) {
++	public List<Map<String, Object>> queryBpmHistoryListForUser(Map<String, String> headers,String userId) {
+ 		List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
+ 		params.add(new BasicNameValuePair("userId", userId));
+-		Map<String, Object> map = queryBpmHistoryList(params);
++		Map<String, Object> map = queryBpmHistoryList(headers,params);
+ 		List<Map<String, Object>> list = (List<Map<String, Object>>) MapUtils.getObject(map, "data");
+ 		return list;
+ 	}
+ 	
+ 	@Override
+-	public Map<String, Object> queryBpmHistoryListForUser(String userId,String start,String size) {
++	public Map<String, Object> queryBpmHistoryListForUser(Map<String, String> headers,String userId,String start,String size) {
+ 		List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
+ 		params.add(new BasicNameValuePair("userId", userId));
+ 		params.add(new BasicNameValuePair("start", StringUtils.isBlank(start)?"0":start));
+ 		params.add(new BasicNameValuePair("size", StringUtils.isBlank(size)?"10":size));
+-		return queryBpmHistoryList(params);
++		return queryBpmHistoryList(headers,params);
+ 	}
+ 	
+ 	/* (non-Javadoc)
+@@ -168,45 +166,45 @@
+ 	 * @see com.quark.cobra.bizapp.bpms.service.IBpmsService#queryBpmListForGroup(java.lang.String)
+ 	 */
+ 	@Override
+-	public List<Map<String, Object>> queryBpmListForGroup(String groupId) {
++	public List<Map<String, Object>> queryBpmListForGroup(Map<String, String> headers,String groupId) {
+ 		List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
+ 		params.add(new BasicNameValuePair("groupId", groupId));
+-		Map<String, Object> map = queryBpmList(params);
++		Map<String, Object> map = queryBpmList(headers,params);
+ 		List<Map<String, Object>> list = (List<Map<String, Object>>) MapUtils.getObject(map, "data");
+ 		return list;
+ 	}
+ 	
+ 	@Override
+-	public Map<String, Object> queryBpmListForGroup(String groupId,String start,String size) {
++	public Map<String, Object> queryBpmListForGroup(Map<String, String> headers,String groupId,String start,String size) {
+ 		List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
+ 		params.add(new BasicNameValuePair("groupId", groupId));
+ 		params.add(new BasicNameValuePair("start", StringUtils.isBlank(start)?"0":start));
+ 		params.add(new BasicNameValuePair("size", StringUtils.isBlank(size)?"10":size));
+-		return queryBpmList(params);
++		return queryBpmList(headers,params);
+ 	}
+ 	
+ 	
+ 	@Override
+-	public Boolean claimTask(String taskId, String userId) {
++	public Boolean claimTask(Map<String, String> headers,String taskId, String userId) {
+ 		Map<String, Object> param = new HashMap<String, Object>();
+ 		param.put("action", "claim");
+ 		param.put("userId", userId);
+-		return actionTask(taskId, param);
++		return actionTask(headers,taskId, param);
+ 	}
+ 
+ 	@Override
+-	public Boolean delegateTask(String taskId, String userId) {
++	public Boolean delegateTask(Map<String, String> headers,String taskId, String userId) {
+ 		Map<String, Object> param = new HashMap<String, Object>();
+ 		param.put("action", "delegate");
+ 		param.put("userId", userId);
+-		return actionTask(taskId, param);
++		return actionTask(headers,taskId, param);
+ 	}
+ 
+ 	@Override
+-	public Boolean releaseTask(String taskId) {
++	public Boolean releaseTask(Map<String, String> headers,String taskId) {
+ 		Map<String, Object> param = new HashMap<String, Object>();
+ 		param.put("action", "release");
+-		return actionTask(taskId, param);
++		return actionTask(headers,taskId, param);
+ 	}
+ 	
+ 	/**
+@@ -215,7 +213,7 @@
+ 	 * @return
+ 	 */
+ 	@Override
+-	public Boolean compeleteTask(String taskId,
++	public Boolean compeleteTask(Map<String, String> headers,String taskId,
+ 			List<Map<String, String>> variables) {
+ 		Map<String, Object> param = new HashMap<String, Object>();
+ 		param.put("action", "complete");
+@@ -222,18 +220,16 @@
+ 		if(variables != null && variables.size() > 0){
+ 			param.put("variables", variables);
+ 		}
+-		return actionTask(taskId, param);
++		return actionTask(headers,taskId, param);
+ 	}
+ 	
+ 	@Override
+-	public Boolean compeleteReciveTask(String processInstanceId,String taskId,
++	public Boolean compeleteReciveTask(Map<String, String> headers,String processInstanceId,String taskId,
+ 			List<Map<String, String>> variables) {
+ 		LOGGER.info("提交回调任务,流程编号:{},任务编号:{},请求参数:{}",processInstanceId,taskId,variables);
+ 		
+ 		Boolean isSuccessAction = true;
+ 		
+-		Map<String, String> headers = getDefaultHeadMap();
+-		
+ 		Map<String, Object> param = new HashMap<String, Object>();
+ 		param.put("processInstanceId", processInstanceId);
+ 		param.put("taskId", taskId);
+@@ -264,10 +260,8 @@
+ 		return isSuccessAction;
+ 	}
+ 	
+-	public Map<String,Object> queryBpmList(List<BasicNameValuePair> params){
++	public Map<String,Object> queryBpmList(Map<String, String> headers,List<BasicNameValuePair> params){
+ 		Map<String, Object> map  = null;
+-		
+-		Map<String, String> headers = getDefaultHeadMap();
+ 		String request = URLEncodedUtils.format(params, CHARSET_NAME);
+ 		String url = bpmsProperties.getActionUrl()+ "?" + request;
+ 		try {
+@@ -287,10 +281,9 @@
+ 		return map;
+ 	}
+ 	
+-	public Map<String,Object> queryBpmHistoryList(List<BasicNameValuePair> params){
++	public Map<String,Object> queryBpmHistoryList(Map<String, String> headers,List<BasicNameValuePair> params){
+ 		Map<String, Object> map  = null;
+-		
+-		Map<String, String> headers = getDefaultHeadMap();
++
+ 		String request = URLEncodedUtils.format(params, CHARSET_NAME);
+ 		String url = bpmsProperties.getQueryHistoryUrl()+ "?" + request;
+ 		try {
+@@ -310,11 +303,10 @@
+ 		return map;
+ 	}
+ 
+-	public Boolean actionTask(String taskId,Map<String, Object> param){
++	public Boolean actionTask(Map<String, String> headers,String taskId,Map<String, Object> param){
+ 		Boolean isSuccessAction = true;
+ 		LOGGER.info("处理任务,任务编号:{},请求参数:{}",taskId,param);
+ 		try {
+-			Map<String, String> headers = getDefaultHeadMap();
+ 			
+ 			String url = bpmsProperties.getActionUrl()+ "/" + taskId;
+ 			String result = HttpClientUtil.doPostWithJson(url, param,
+@@ -339,21 +331,16 @@
+ 		return isSuccessAction;
+ 	}
+ 	
++
+ 	
+-
+-	@Value("${system.tenantId:}")
+-	private String tenant;
+-	@Value("${system.clientId:}")
+-	private String clientId;
+-	/**
+-	 * @return
+-	 * 
+-	 *         设置bpms需要的请求头信息
++	/* (non-Javadoc)
++	 * @see com.qf.cobra.bpms.service.IBpmsService#getDefaultHeadMap(java.lang.String, java.lang.String)
+ 	 */
+-	public Map<String, String> getDefaultHeadMap() {
++	@Override
++	public Map<String, String> getHeadMap(String tenantId,String clientId) {
+ 		Map<String, String> headers = new HashMap<String, String>();
+ 		headers.put("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+-		headers.put("Tenant", tenant);
++		headers.put("Tenant", tenantId);
+ 		headers.put("clientId", clientId);
+ //		headers.put("Authorization", SessionUtil.getCurrentUser().getToken());
+ 		return headers;
+Index: src/main/java/com/qf/cobra/loan/controller/AuditController.java
+===================================================================
+--- src/main/java/com/qf/cobra/loan/controller/AuditController.java	(revision 749)
++++ src/main/java/com/qf/cobra/loan/controller/AuditController.java	(working copy)
+@@ -3,6 +3,8 @@
+ import java.util.Map;
+ import java.util.Objects;
+ 
++import javax.servlet.http.HttpServletRequest;
++
+ import org.apache.commons.lang3.StringUtils;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+@@ -9,7 +11,6 @@
+ import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.data.mongodb.core.MongoTemplate;
+ import org.springframework.web.bind.annotation.RequestBody;
+-import org.springframework.web.bind.annotation.RequestHeader;
+ import org.springframework.web.bind.annotation.RequestMapping;
+ import org.springframework.web.bind.annotation.RequestMethod;
+ import org.springframework.web.bind.annotation.RestController;
+@@ -61,7 +62,7 @@
+ 	 */
+ 	@SuppressWarnings("unchecked")
+ 	@RequestMapping(value = "/commit", method = RequestMethod.POST)
+-	public ResponseData<?> commitInfo(@RequestBody Map<String, Object> params, @RequestHeader Map<String, Object> header) {
++	public ResponseData<?> commitInfo(@RequestBody Map<String, Object> params, HttpServletRequest request) {
+ 		LOGGER.info("审批记录开始,参数有:{}",params);
+ 		// String tenant = request.getHeader(DictItem.LOAN_TENANT);
+ 		// String client = request.getHeader(DictItem.LOAN_CLIENT);
+@@ -104,7 +105,7 @@
+ 						}
+ 					}
+ 					LOGGER.info("审批提交流程开始,进件编号有:{}",appId);
+-					auditResult = loanService.compeleteTask(appId, taskId, result);
++					auditResult = loanService.compeleteTask(request.getHeader("tenantId"),request.getHeader("clientId"),appId, taskId, result);
+ 					LOGGER.info("审批提交流程结束,进件编号有:{}",appId);
+ 					if (auditResult) {
+ 						auditService.updateAppStatus(appId, applyStatus);
+Index: src/main/java/com/qf/cobra/loan/controller/EnteringInformationsController.java
+===================================================================
+--- src/main/java/com/qf/cobra/loan/controller/EnteringInformationsController.java	(revision 749)
++++ src/main/java/com/qf/cobra/loan/controller/EnteringInformationsController.java	(working copy)
+@@ -4,6 +4,8 @@
+ import java.util.Map;
+ import java.util.Objects;
+ 
++import javax.servlet.http.HttpServletRequest;
++
+ import org.apache.commons.collections.MapUtils;
+ import org.apache.commons.lang3.StringUtils;
+ import org.slf4j.Logger;
+@@ -51,7 +53,7 @@
+ 	 * @since 2017年4月19日 上午10:25:58
+ 	 */
+ 	@RequestMapping(value = "/entering")
+-	public ResponseData<?> enteringInformations(@RequestBody Map<String, Object> params) {
++	public ResponseData<?> enteringInformations(@RequestBody Map<String, Object> params,HttpServletRequest request) {
+ 		@SuppressWarnings("rawtypes")
+ 		ResponseData responseData = ResponseUtil.defaultResponse();
+ 		try {
+@@ -65,7 +67,7 @@
+ 			String applyStatus = "";
+ 			if (!StringUtils.equalsIgnoreCase(isSave, DictItem.YES)) {
+ 				if (Objects.equals(ResponseCode.SUCCESS, responseData.getCode())) {
+-					Boolean compeleteTask = loanService.compeleteTask(appId, taskId);
++					Boolean compeleteTask = loanService.compeleteTask(request.getHeader("tenantId"),request.getHeader("clientId"),appId, taskId);
+ 					applyStatus = DictItem.WAIT_FIRST_AUDIT;
+ 					if (compeleteTask) {
+ 						auditService.updateAppStatus(appId, applyStatus);
+Index: src/main/java/com/qf/cobra/loan/controller/LoanRestController.java
+===================================================================
+--- src/main/java/com/qf/cobra/loan/controller/LoanRestController.java	(revision 749)
++++ src/main/java/com/qf/cobra/loan/controller/LoanRestController.java	(working copy)
+@@ -8,7 +8,6 @@
+ 
+ import org.apache.commons.collections.MapUtils;
+ import org.apache.commons.lang3.StringUtils;
+-import org.apache.http.HttpRequest;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ import org.springframework.beans.factory.annotation.Autowired;
+@@ -69,18 +68,11 @@
+ 			loanInfo.setClientId(clientId);
+ 			loanInfo.setTenantId(tenantId);
+ 			mongoTemplate.save(loanInfo);
+-		}else{
+-			//修改cilentId
+-			try {
+-				LOGGER.info("修改loanApp中的ClientId和tenantId,进件编号为：{}",loanInfo.getAppId());
+-				auditService.updateLoanAppClientId(loanInfo.getAppId(), clientId, tenantId);
+-			} catch (Exception e) {
+-				LOGGER.info("获得clientId和tenantId错误");
+-			}
+ 		}
++		
+ 		if (loanInfoquery != null && StringUtils.isBlank(loanInfoquery.getProcessInstanceId())) {
+ 			// 启动进件流程
+-			loanService.startBpmProcess(loanInfo);
++			loanService.startBpmProcess(tenantId,clientId,loanInfo);
+ 		}
+ 
+ 		return ResponseUtil.defaultResponse();
+Index: src/main/java/com/qf/cobra/loan/controller/TaskController.java
+===================================================================
+--- src/main/java/com/qf/cobra/loan/controller/TaskController.java	(revision 749)
++++ src/main/java/com/qf/cobra/loan/controller/TaskController.java	(working copy)
+@@ -2,6 +2,8 @@
+ 
+ import java.util.Map;
+ 
++import javax.servlet.http.HttpServletRequest;
++
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ import org.springframework.beans.factory.annotation.Autowired;
+@@ -26,10 +28,10 @@
+ 	private ITaskService taskService;
+ 	
+ 	@PostMapping("/taskPool")
+-	public ResponseData<Pagination> queryTaskPool(@RequestBody Pagination pagination) {
++	public ResponseData<Pagination> queryTaskPool(@RequestBody Pagination pagination,HttpServletRequest request) {
+ 		ResponseData<Pagination> responseData = ResponseUtil.defaultResponse();
+ 		try {
+-			taskService.queryTaskPool(pagination);
++			taskService.queryTaskPool(request.getHeader("tenantId"), request.getHeader("clientId"),pagination);
+ 			responseData.setData(pagination);
+ 		} catch (Exception e) {
+ 			LOGGER.error("任务池查询失败", e);
+@@ -40,10 +42,10 @@
+ 	}
+ 	
+ 	@PostMapping("/userTask")
+-	public ResponseData<Pagination> queryUserTask(@RequestBody Pagination pagination) {
++	public ResponseData<Pagination> queryUserTask(@RequestBody Pagination pagination,HttpServletRequest request) {
+ 		ResponseData<Pagination> responseData = ResponseUtil.defaultResponse();
+ 		try {
+-			taskService.queryUserTask(pagination);
++			taskService.queryUserTask(request.getHeader("tenantId"), request.getHeader("clientId"),pagination);
+ 			responseData.setData(pagination);
+ 		} catch (Exception e) {
+ 			LOGGER.error("待办任务查询失败", e);
+@@ -68,10 +70,10 @@
+ 	}
+ 	
+ 	@PostMapping("/claimTask")
+-	public ResponseData<Pagination> claimTask(@RequestBody Map<String, String> claimMap) {
++	public ResponseData<Pagination> claimTask(@RequestBody Map<String, String> claimMap,HttpServletRequest request) {
+ 		ResponseData<Pagination> responseData = ResponseUtil.defaultResponse();
+ 		try {
+-			taskService.claimTask(claimMap);
++			taskService.claimTask(request.getHeader("tenantId"), request.getHeader("clientId"),claimMap);
+ 		} catch (Exception e) {
+ 			LOGGER.error("签收任务失败", e);
+ 			responseData.setCode(ResponseCode.SYSTEM_ERROR);
+Index: src/main/java/com/qf/cobra/loan/service/impl/LoanServiceImpl.java
+===================================================================
+--- src/main/java/com/qf/cobra/loan/service/impl/LoanServiceImpl.java	(revision 749)
++++ src/main/java/com/qf/cobra/loan/service/impl/LoanServiceImpl.java	(working copy)
+@@ -45,9 +45,9 @@
+ 	private MongoTemplate springMongoTemplate;
+ 
+ 	@Override
+-	public void startBpmProcess(LoanApply loanApply) {
++	public void startBpmProcess(String tenantId,String clientId,LoanApply loanApply) {
+ 		// 开启流程
+-		String processInstanceId = bpmsService.startBpmProcess(loanApply.getAppId());
++		String processInstanceId = bpmsService.startBpmProcess(bpmsService.getHeadMap(tenantId, clientId),loanApply.getAppId());
+ 		// 存储关联关系
+ 		if (StringUtils.isNotBlank(processInstanceId)) {
+ 			LoanBpmRelation loanBpmRelation = new LoanBpmRelation();
+@@ -65,7 +65,7 @@
+ 	
+ 
+ 	@Override
+-	public Boolean compeleteTask(String appId, String taskId,String...result) {
++	public Boolean compeleteTask(String tenantId,String clientId,String appId, String taskId,String...result) {
+ 		List<Map<String, String>> list = new ArrayList<Map<String,String>>();
+ 		for (String s : result) {  
+ 			Map<String, String> variables = new HashMap<String, String>();
+@@ -73,7 +73,7 @@
+ 			variables.put("value", s);
+ 			list.add(variables);
+         } 
+-		Boolean isSuccessCommit = bpmsService.compeleteTask(taskId, list);
++		Boolean isSuccessCommit = bpmsService.compeleteTask(bpmsService.getHeadMap(tenantId, clientId),taskId, list);
+ 		LOGGER.info("进件编号:{},任务编号:{},流程变量:{},结束流程任务结果:{}", appId, taskId, list, isSuccessCommit);
+ 		return isSuccessCommit;
+ 	}
+@@ -168,7 +168,7 @@
+ 		if(StringUtils.isBlank(processInstanceId)||StringUtils.isBlank(taskId)){
+ 			isSuccessCommit = false;
+ 		}else{
+-			isSuccessCommit = bpmsService.compeleteReciveTask(processInstanceId, taskId, list);
++			isSuccessCommit = bpmsService.compeleteReciveTask(bpmsService.getHeadMap("", ""),processInstanceId, taskId, list);
+ 		}
+ 		return isSuccessCommit;
+ 	}
+Index: src/main/java/com/qf/cobra/loan/service/impl/TaskServiceImpl.java
+===================================================================
+--- src/main/java/com/qf/cobra/loan/service/impl/TaskServiceImpl.java	(revision 749)
++++ src/main/java/com/qf/cobra/loan/service/impl/TaskServiceImpl.java	(working copy)
+@@ -26,7 +26,6 @@
+ import com.qf.cobra.pojo.Pagination;
+ import com.qf.cobra.pojo.SystemLog;
+ import com.qf.cobra.util.DateUtil;
+-import com.qf.cobra.util.JsonUtil;
+ import com.qf.cobra.util.LoanAuditOperation;
+ import com.qf.cobra.util.SessionUtil;
+ import com.qf.cobra.util.SystemOperation;
+@@ -44,7 +43,7 @@
+ 	private ISystemLogService systemLogService;
+ 	
+ 	@Override
+-	public void queryTaskPool(Pagination pagination) throws Exception {
++	public void queryTaskPool(String tenantId,String clientId,Pagination pagination) throws Exception {
+ 		Integer start = null;
+ 		Integer size = null;
+ 		Map<String, Object> condition = pagination.getCondition();
+@@ -59,15 +58,15 @@
+ //				constructBizAndBpm(pagination);
+ //			}
+ //		} else {
+-		List<Map<String, Object>> bpmTaskList = bpmsService.queryBpmListForGroup(groupId);
++		List<Map<String, Object>> bpmTaskList = bpmsService.queryBpmListForGroup(bpmsService.getHeadMap(tenantId, clientId),groupId);
+ 		filterAndPageTaskList(pagination, bpmTaskList);
+ //		}
+ 	}
+ 
+ 	@Override
+-	public void queryUserTask(Pagination pagination) {
++	public void queryUserTask(String tenantId,String clientId,Pagination pagination) {
+ 		int start = (pagination.getCurrentPage()-1) * pagination.getPageSize();
+-		Map<String, Object> bpmTaskResult = bpmsService.queryBpmListForUser(SessionUtil.getCurrentUser().getUserId(), String.valueOf(start), String.valueOf(pagination.getPageSize()));
++		Map<String, Object> bpmTaskResult = bpmsService.queryBpmListForUser(bpmsService.getHeadMap(tenantId, clientId),SessionUtil.getCurrentUser().getUserId(), String.valueOf(start), String.valueOf(pagination.getPageSize()));
+ 		pagination.setData((List) bpmTaskResult.get("data"));
+ 		pagination.setTotal((int) bpmTaskResult.get("total"));
+ 		constructBizAndBpm(pagination);
+@@ -298,7 +297,7 @@
+ 	}
+ 
+ 	@Override
+-	public void claimTask(Map<String, String> claimMap) {
++	public void claimTask(String tenantId,String clientId,Map<String, String> claimMap) {
+ 		String appId = claimMap.get("appId");
+ 		String taskId = claimMap.get("taskId");
+ 		String taskType = claimMap.get("taskType");
+@@ -308,7 +307,7 @@
+ //		LOGGER.info("签收任务获取当前userId：" + userId);
+ //		LOGGER.info("签收任务获取当前用户信息：" + JsonUtil.convert(SessionUtil.getCurrentUser()));
+ 		
+-		boolean result = bpmsService.claimTask(taskId, userId);
++		boolean result = bpmsService.claimTask(bpmsService.getHeadMap(tenantId, clientId),taskId, userId);
+ 		Map<String, Object> extData = new HashMap<String, Object>();
+ 		extData.put("taskId", taskId);
+ 		extData.put("taskType", taskType);
+Index: src/main/java/com/qf/cobra/loan/service/ITaskService.java
+===================================================================
+--- src/main/java/com/qf/cobra/loan/service/ITaskService.java	(revision 749)
++++ src/main/java/com/qf/cobra/loan/service/ITaskService.java	(working copy)
+@@ -15,12 +15,12 @@
+  */
+ public interface ITaskService {
+ 
+-	void queryTaskPool(Pagination pagination) throws Exception;
++	void queryTaskPool(String tenantId,String clientId,Pagination pagination) throws Exception;
+ 	
+-	void queryUserTask(Pagination pagination);
++	void queryUserTask(String tenantId,String clientId,Pagination pagination);
+ 	
+ 	void queryHistoryTask(Pagination pagination) throws Exception;
+ 	
+-	void claimTask(Map<String, String> claimMap);
++	void claimTask(String tenantId,String clientId,Map<String, String> claimMap);
+ 	
+ }
+Index: src/main/java/com/qf/cobra/loan/service/LoanService.java
+===================================================================
+--- src/main/java/com/qf/cobra/loan/service/LoanService.java	(revision 749)
++++ src/main/java/com/qf/cobra/loan/service/LoanService.java	(working copy)
+@@ -17,7 +17,7 @@
+ 	 * 
+ 	 * @param loanInfo
+ 	 */
+-	public void startBpmProcess(LoanApply loanInfo);
++	public void startBpmProcess(String tenantId,String clientId,LoanApply loanInfo);
+ 
+ 	/**
+ 	 * 默认提交任务-无流程变量
+@@ -25,7 +25,7 @@
+ 	 * @param appId
+ 	 * @param taskId
+ 	 */
+-	public Boolean compeleteTask(String appId, String taskId, String... result);
++	public Boolean compeleteTask(String tenantId,String clientId,String appId, String taskId, String... result);
+ 
+ 	/**
+ 	 * 默认提交回调任务-无流程变量

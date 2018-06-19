@@ -1,0 +1,2 @@
+student.name.notnull = Name is required!
+error.age = Age value must be between 1 and 150!

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quark.cobra.dao.mysql.UserMapper">
+    <sql id="Base_Column_List">
+        tuser.id as id,
+        tuser.password as password,
+        tuser.mobile as mobile,
+        tuser.nick_name as nickName,
+        tuser.registration_date as registrationDate,
+        tuser.update_date as updateDate
+    </sql>
+
+    <!-- 更新用户信息 -->
+    <update id="updateUserById" parameterType="com.quark.cobra.entity.User">
+    	UPDATE
+    		user
+    	<set>
+    		<if test="null != idName and idName != ''">
+    			id_name = #{idName},
+    		</if>
+    		<if test="null != idNo and idNo != ''">
+    			id_no = #{idNo},
+    		</if>
+    		<if test="null != certificationDate">
+    			certification_date = #{certificationDate}
+    		</if>
+    	</set>
+    	WHERE
+    		id = #{id}
+    </update>
+</mapper>
